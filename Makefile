@@ -61,3 +61,6 @@ clean:
 	rm -f  bench_cpy.txt bench_ref.txt ref.txt cpy.txt caculate
 
 -include $(deps)
+
+plot:
+	gnuplot scripts/runtime3.gp
