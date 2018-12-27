@@ -7,6 +7,9 @@
 #include "tst.h"
 /** constants insert, delete, max word(s) & stack nodes */
 enum { INS, DEL, WRDMAX = 256, STKMAX = 512, LMAX = 1024 };
+#include "bloom.h"
+#define TableSize 5000000
+#define HashNumber 2
 #define REF INS
 #define CPY DEL
 
@@ -24,6 +27,7 @@ static void rmcrlf(char *s)
 
 int main(int argc, char **argv)
 {
+    bloom_t bloom = bloom_create(TableSize);
     char word[WRDMAX] = "";
     char *sgl[LMAX] = {NULL};
     tst_node *root = NULL, *res = NULL;
@@ -45,8 +49,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "error: memory exhausted, tst_insert.\n");
             fclose(fp);
             return 1;
+        } else { /* update bloom filter  */
+            bloom_add(bloom, word);
         }
         idx++;
+        *word += (strlen(word) + 1);
     }
     t2 = tvgetf();
 

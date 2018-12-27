@@ -68,6 +68,26 @@ int main(int argc, char **argv)
     fclose(fp);
     printf("ternary_tree, loaded %d words in %.6f sec\n", idx, t2 - t1);
 
+    if (argc == 2 && strcmp(argv[1], "--bench") == 0) {
+        int stat = bench_test(root, BENCH_TEST_FILE, LMAX);
+        tst_free(root);
+        return stat;
+    }
+
+    int count = 0;
+    double temp;
+    FILE *output;
+    output = fopen("ref.txt", "a+");
+    if (output != NULL) {
+        while (fscanf(output, "%d %lf", &count, &temp) != EOF) {
+        }
+        fflush(output);
+        count++;
+        fprintf(output, "%d %.6f\n", count, t2 - t1);
+        fclose(output);
+    } else
+        printf("open file error\n");
+
     for (;;) {
         char *p;
         printf(
@@ -79,7 +99,7 @@ int main(int argc, char **argv)
             " q  quit, freeing all data\n\n"
             "choice: ");
 
-        if (argc > 1 && strcmp(argv[1], "--bench") == 0)  // a for auto
+        if (argc > 2 && strcmp(argv[1], "--bench") == 0)  // a for auto
             strcpy(word, argv[2]);
         else
             fgets(word, sizeof word, stdin);
@@ -88,7 +108,7 @@ int main(int argc, char **argv)
         switch (*word) {
         case 'a':
             printf("enter word to add: ");
-            if (argc > 1 && strcmp(argv[1], "--bench") == 0)
+            if (argc > 3 && strcmp(argv[1], "--bench") == 0)
                 strcpy(Top, argv[3]);
 
             else if (!fgets(Top, sizeof word, stdin)) {
